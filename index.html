@@ -1,0 +1,4175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Command Center — Prepared for Stalwork, Inc.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ========================================
+       CSS VARIABLES — STALWORK BRAND
+       ======================================== */
+    :root {
+      --bg-primary: #111111;
+      --bg-secondary: #1A1A1A;
+      --bg-card: #1E1E1E;
+      --bg-card-hover: #242424;
+      --gold: #a97861;
+      --gold-light: #C09080;
+      --gold-dark: #8B6050;
+      --gold-muted: rgba(169, 120, 97, 0.15);
+      --gold-glow: rgba(169, 120, 97, 0.08);
+      --text-primary: #FFFFFF;
+      --text-secondary: #AAAAAA;
+      --text-muted: #777777;
+      --divider: rgba(169, 120, 97, 0.3);
+      --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --max-width: 1200px;
+      --section-padding: clamp(80px, 12vh, 160px);
+      --side-padding: clamp(24px, 5vw, 80px);
+    }
+
+    /* ========================================
+       RESET & BASE
+       ======================================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      font-size: 16px;
+      font-weight: 400;
+      overflow-x: hidden;
+    }
+
+    ::selection {
+      background: var(--gold);
+      color: var(--bg-primary);
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* ========================================
+       TYPOGRAPHY
+       ======================================== */
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      font-weight: 400;
+    }
+
+    h3 {
+      font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+      font-weight: 500;
+    }
+
+    h4 {
+      font-size: clamp(1.1rem, 1.5vw, 1.25rem);
+      font-weight: 600;
+    }
+
+    p {
+      font-size: clamp(0.95rem, 1.1vw, 1.1rem);
+      color: var(--text-secondary);
+      line-height: 1.75;
+      max-width: 680px;
+    }
+
+    /* ========================================
+       LAYOUT
+       ======================================== */
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 var(--side-padding);
+    }
+
+    section {
+      padding: var(--section-padding) 0;
+      position: relative;
+    }
+
+    /* ========================================
+       GOLD DIVIDER
+       ======================================== */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        var(--divider) 20%,
+        var(--gold) 50%,
+        var(--divider) 80%,
+        transparent 100%
+      );
+      border: none;
+      margin: 0;
+    }
+
+    /* ========================================
+       SECTION LABEL (small gold overline text)
+       ======================================== */
+    .section-label {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+
+    /* ========================================
+       SCROLL ANIMATIONS
+       Apple-style: slow, graceful, minimal distance.
+       Easing: ease-out with long tail for deceleration.
+       ======================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.12s; }
+    .reveal-delay-2 { transition-delay: 0.24s; }
+    .reveal-delay-3 { transition-delay: 0.36s; }
+    .reveal-delay-4 { transition-delay: 0.48s; }
+    .reveal-delay-5 { transition-delay: 0.60s; }
+    .reveal-delay-6 { transition-delay: 0.72s; }
+
+    /* Fade in from left */
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Fade in from right */
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(20px);
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Scale reveal */
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.97);
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal-scale.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Reduce motion for accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal-left, .reveal-right, .reveal-scale {
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+
+    /* ========================================
+       HEADER / NAVBAR
+       ======================================== */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.25rem var(--side-padding);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: transparent;
+      transition: background 0.4s ease, padding 0.4s ease, backdrop-filter 0.4s ease;
+    }
+
+    .site-header.scrolled {
+      background: rgba(17, 17, 17, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 0.85rem var(--side-padding);
+      border-bottom: 1px solid rgba(169, 120, 97, 0.1);
+    }
+
+    .header-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .header-prepared {
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .header-company {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .header-nav a {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.4s ease;
+    }
+
+    .header-nav a:hover {
+      color: var(--gold);
+    }
+
+    /* ========================================
+       SECTION 1: HERO
+       ======================================== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    /* Ambient background glow */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(169, 120, 97, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+      animation: heroGlow 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes heroGlow {
+      0% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+      100% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+    }
+
+    /* Subtle grid pattern overlay */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(169, 120, 97, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(169, 120, 97, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 70%);
+    }
+
+    .hero-content {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      padding: var(--side-padding);
+    }
+
+    .hero-prepared-for {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: heroFadeIn 1s ease 0.3s forwards;
+    }
+
+    .hero-title {
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      font-weight: 400;
+      line-height: 0.95;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: heroSlideUp 1s ease 0.5s forwards;
+    }
+
+    .hero-title .accent {
+      color: var(--gold);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 2.5vw, 2rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: heroFadeIn 1s ease 0.8s forwards;
+    }
+
+    .hero-tagline {
+      font-family: var(--font-body);
+      font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+      font-weight: 400;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+      opacity: 0;
+      animation: heroFadeIn 1s ease 1.1s forwards;
+    }
+
+    .hero-rule {
+      width: 80px;
+      height: 1px;
+      background: var(--gold);
+      border: none;
+      margin: 0 auto 2rem;
+      opacity: 0;
+      animation: heroFadeIn 1s ease 1.3s forwards;
+    }
+
+    .hero-scroll-hint {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      opacity: 0;
+      animation: heroFadeIn 1s ease 1.5s forwards;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .scroll-arrow {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.2; transform: scaleY(1); }
+      50% { opacity: 0.6; transform: scaleY(1.15); }
+    }
+
+    @keyframes heroFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes heroSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ========================================
+       SECTION 2: THE CHALLENGE
+       ======================================== */
+    .challenge {
+      background: var(--bg-secondary);
+    }
+
+    .challenge-intro {
+      max-width: 760px;
+      margin-bottom: 5rem;
+    }
+
+    .challenge-intro h2 {
+      margin-bottom: 1.5rem;
+    }
+
+    .challenge-intro p {
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      line-height: 1.8;
+    }
+
+    .challenge-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .challenge-item {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 0 2.5rem;
+      padding: 3rem 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      transition: background 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .challenge-item:last-child {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .challenge-item:hover {
+      background: rgba(169, 120, 97, 0.02);
+    }
+
+    .challenge-number {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 4vw, 4rem);
+      font-weight: 400;
+      color: var(--gold);
+      opacity: 0.4;
+      line-height: 1;
+      padding-top: 0.15rem;
+      text-align: right;
+      user-select: none;
+    }
+
+    .challenge-body {
+      max-width: 720px;
+    }
+
+    .challenge-headline {
+      font-family: var(--font-display);
+      font-size: clamp(1.25rem, 2vw, 1.6rem);
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+
+    .challenge-headline .gold {
+      color: var(--gold);
+    }
+
+    .challenge-context {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      max-width: 620px;
+    }
+
+    .challenge-footnote {
+      margin-top: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    .challenge-footnote svg {
+      flex-shrink: 0;
+    }
+
+    /* Challenge closing statement */
+    .challenge-close {
+      max-width: 680px;
+      margin: 4rem auto 0;
+      text-align: center;
+    }
+
+    .challenge-close p {
+      font-family: var(--font-display);
+      font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .challenge-close .gold {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    @media (max-width: 640px) {
+      .challenge-item {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 2rem 0;
+      }
+
+      .challenge-number {
+        text-align: left;
+        font-size: 2.5rem;
+      }
+    }
+
+    /* ========================================
+       SECTION 3: WE UNDERSTAND YOUR BUSINESS
+       ======================================== */
+    .understand {
+      background: var(--bg-primary);
+      position: relative;
+    }
+
+    .understand-header {
+      max-width: 760px;
+      margin-bottom: 5rem;
+    }
+
+    .understand-header h2 {
+      margin-bottom: 1.5rem;
+    }
+
+    .understand-header p {
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      line-height: 1.8;
+    }
+
+    /* Large hero quote */
+    .hero-quote {
+      text-align: center;
+      padding: 4rem 2rem;
+      margin-bottom: 5rem;
+      position: relative;
+    }
+
+    .hero-quote::before,
+    .hero-quote::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-quote::before { top: 0; }
+    .hero-quote::after { bottom: 0; }
+
+    .hero-quote blockquote {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-primary);
+      line-height: 1.35;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-quote blockquote .gold {
+      color: var(--gold);
+    }
+
+    /* Philosophy blocks — alternating layout */
+    .philosophy-section {
+      margin-bottom: 5rem;
+    }
+
+    .philosophy-block {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0 3rem;
+      padding: 3rem 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      align-items: start;
+    }
+
+    .philosophy-block:last-child {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .philosophy-label {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+      font-weight: 500;
+      font-style: italic;
+      color: var(--gold);
+      line-height: 1.3;
+      padding-top: 0.2rem;
+    }
+
+    .philosophy-body h4 {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .philosophy-body p {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      max-width: 580px;
+    }
+
+    @media (max-width: 768px) {
+      .philosophy-block {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 2rem 0;
+      }
+
+      .philosophy-label {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    /* Pull-quote testimonials (large format) */
+    .pull-quotes {
+      margin-bottom: 5rem;
+    }
+
+    .pull-quotes-header {
+      margin-bottom: 3.5rem;
+    }
+
+    .pull-quotes-header h3 {
+      font-size: clamp(1.5rem, 2.5vw, 2rem);
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .pull-quotes-header p {
+      max-width: 560px;
+    }
+
+    .pull-quote {
+      padding: 2.5rem 0 2.5rem 3rem;
+      border-left: 2px solid var(--gold);
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .pull-quote::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 40%;
+      background: linear-gradient(90deg, var(--gold-glow), transparent);
+      pointer-events: none;
+    }
+
+    .pull-quote blockquote {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 2vw, 1.65rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-primary);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+      position: relative;
+      max-width: 700px;
+    }
+
+    .pull-quote cite {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-style: normal;
+      color: var(--gold);
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      position: relative;
+    }
+
+    .pull-quote cite .cite-title {
+      display: block;
+      font-weight: 400;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      margin-top: 0.15rem;
+    }
+
+    @media (max-width: 640px) {
+      .pull-quote {
+        padding: 2rem 0 2rem 1.5rem;
+      }
+    }
+
+    /* Numbers strip */
+    .numbers-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      padding: 3.5rem 0;
+      border-top: 1px solid rgba(169, 120, 97, 0.15);
+      border-bottom: 1px solid rgba(169, 120, 97, 0.15);
+      margin-bottom: 5rem;
+    }
+
+    .number-item {
+      text-align: center;
+    }
+
+    .number-item .number {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      font-weight: 400;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .number-item .label {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      line-height: 1.4;
+    }
+
+    /* Section 3 closing bridge */
+    .understand-bridge {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .understand-bridge p {
+      font-family: var(--font-display);
+      font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .understand-bridge .gold {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    /* ========================================
+       SECTION 4: THE SOLUTION
+       ======================================== */
+    .solution {
+      background: var(--bg-secondary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated gold line across the top */
+    .solution-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .solution-line.visible {
+      transform: scaleX(1);
+    }
+
+    /* Ambient glow behind section */
+    .solution::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 1000px;
+      height: 600px;
+      background: radial-gradient(ellipse, rgba(169, 120, 97, 0.04) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .solution-header {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .solution-header h2 {
+      margin-bottom: 1.5rem;
+    }
+
+    .solution-header h2 .gold {
+      color: var(--gold);
+    }
+
+    .solution-core {
+      text-align: center;
+      max-width: 740px;
+      margin: 0 auto 5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .solution-core-message {
+      font-family: var(--font-display);
+      font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-primary);
+      line-height: 1.55;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 2.5rem 0;
+      border-top: 1px solid var(--divider);
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .solution-core-message .gold {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    /* 4-column pillar cards */
+    .solution-pillars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 4rem;
+    }
+
+    .pillar-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 2px;
+      padding: 2.25rem 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pillar-card:hover {
+      border-color: rgba(169, 120, 97, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Gold top gradient */
+    .pillar-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark), transparent);
+      opacity: 0;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pillar-card:hover::before {
+      opacity: 1;
+    }
+
+    .pillar-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gold-muted);
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+    }
+
+    .pillar-number {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--gold);
+      opacity: 0.5;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .pillar-card h4 {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      line-height: 1.35;
+    }
+
+    .pillar-card p {
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+
+    .pillar-card p .gold {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    /* Solution closing */
+    .solution-close {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .solution-close p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .solution-close .gold {
+      color: var(--gold);
+    }
+
+    @media (max-width: 1024px) {
+      .solution-pillars {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .solution-pillars {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ========================================
+       SECTION 5: PLATFORM OVERVIEW
+       ======================================== */
+    .platform {
+      background: var(--bg-primary);
+      position: relative;
+    }
+
+    .platform-header {
+      max-width: 760px;
+      margin-bottom: 5rem;
+    }
+
+    .platform-header h2 {
+      margin-bottom: 1.5rem;
+    }
+
+    .platform-header p {
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      line-height: 1.8;
+    }
+
+    /* Feature area cards */
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .platform-grid--bottom {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      max-width: 810px;
+      margin: 0 auto;
+    }
+
+    .feature-area {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 2px;
+      padding: 2.25rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  background 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .feature-area:hover {
+      border-color: rgba(169, 120, 97, 0.12);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Gold top line on hover */
+    .feature-area::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .feature-area:hover::before {
+      opacity: 1;
+    }
+
+    .feature-area-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-area-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gold-muted);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .feature-area-title {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .feature-area-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .feature-area-list li {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .feature-area-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.55rem;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0.6;
+    }
+
+    .feature-area-list li .highlight {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    /* Feature area badge */
+    .feature-area-badge {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: var(--gold-muted);
+      padding: 0.25rem 0.65rem;
+      border-radius: 2px;
+      margin-top: 1.25rem;
+    }
+
+    @media (max-width: 1024px) {
+      .platform-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .platform-grid--bottom {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .platform-grid,
+      .platform-grid--bottom {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ========================================
+       SECTION 6: THREE TIERS
+       ======================================== */
+    .tiers {
+      background: var(--bg-secondary);
+      position: relative;
+    }
+
+    .tiers-header {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 5rem;
+    }
+
+    .tiers-header h2 {
+      margin-bottom: 1.25rem;
+    }
+
+    .tiers-header p {
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      line-height: 1.8;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Tier grid */
+    .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      align-items: start;
+      margin-bottom: 4rem;
+    }
+
+    /* Base tier card */
+    .tier-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 3px;
+      padding: 2.5rem 2rem 2rem;
+      position: relative;
+      transition: border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tier-card:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Featured / recommended tier */
+    .tier-card--featured {
+      border-color: var(--gold);
+      background: linear-gradient(180deg, rgba(169, 120, 97, 0.06) 0%, var(--bg-card) 35%);
+      transform: scale(1.03);
+      z-index: 2;
+      box-shadow: 0 0 60px rgba(169, 120, 97, 0.08), 0 25px 80px rgba(0, 0, 0, 0.3);
+    }
+
+    .tier-card--featured:hover {
+      border-color: var(--gold-light);
+      transform: scale(1.02);
+    }
+
+    /* Recommended badge */
+    .tier-badge {
+      position: absolute;
+      top: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--bg-primary);
+      background: var(--gold);
+      padding: 0.4rem 1.25rem;
+      border-radius: 0 0 3px 3px;
+    }
+
+    /* Tier header area */
+    .tier-header {
+      text-align: center;
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .tier-card--featured .tier-header {
+      border-bottom-color: rgba(169, 120, 97, 0.2);
+    }
+
+    .tier-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2vw, 1.85rem);
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+    }
+
+    .tier-card--featured .tier-name {
+      color: var(--gold);
+    }
+
+    .tier-subtitle {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .tier-desc {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      max-width: 100%;
+    }
+
+    /* Feature list */
+    .tier-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .tier-features li {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      padding-left: 1.6rem;
+      position: relative;
+    }
+
+    /* Checkmark */
+    .tier-features li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.25rem;
+      width: 12px;
+      height: 12px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a97861' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    .tier-features li .feat-bold {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .tier-features li .feat-gold {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* "Includes everything in ..." label */
+    .tier-inherits {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(169, 120, 97, 0.12);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tier-inherits svg {
+      flex-shrink: 0;
+      opacity: 0.6;
+    }
+
+    /* CTA button */
+    .tier-cta {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.9rem 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 2px;
+      color: var(--text-secondary);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .tier-cta:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Featured CTA — gold */
+    .tier-cta--gold {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(169, 120, 97, 0.08);
+    }
+
+    .tier-cta--gold:hover {
+      background: var(--gold);
+      color: var(--bg-primary);
+      border-color: var(--gold);
+    }
+
+    /* Tiers footnote */
+    .tiers-footnote {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .tiers-footnote p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .tiers-footnote .gold {
+      color: var(--gold);
+    }
+
+    @media (max-width: 1024px) {
+      .tiers-grid {
+        grid-template-columns: 1fr;
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+        gap: 2rem;
+      }
+
+      .tier-card--featured {
+        transform: none;
+        order: -1;
+      }
+
+      .tier-card--featured:hover {
+        transform: none;
+      }
+    }
+
+    /* ========================================
+       SECTION 7: CLIENT EXPERIENCE
+       ======================================== */
+    .client-exp {
+      background: var(--bg-primary);
+      position: relative;
+    }
+
+    .client-exp-header {
+      text-align: center;
+      max-width: 740px;
+      margin: 0 auto 5rem;
+    }
+
+    .client-exp-header h2 {
+      margin-bottom: 1.25rem;
+    }
+
+    .client-exp-header p {
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      line-height: 1.8;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Journey timeline */
+    .journey {
+      position: relative;
+      max-width: 700px;
+      margin: 0 auto 5rem;
+    }
+
+    /* Vertical gold line */
+    .journey::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 27px;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--gold), rgba(169, 120, 97, 0.15));
+    }
+
+    .journey-step {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 0 1.75rem;
+      padding-bottom: 3rem;
+      position: relative;
+    }
+
+    .journey-step:last-child {
+      padding-bottom: 0;
+    }
+
+    .journey-node {
+      display: flex;
+      justify-content: center;
+      padding-top: 0.1rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .journey-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 2px solid var(--gold);
+      transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .journey-step:hover .journey-dot {
+      background: var(--gold);
+      box-shadow: 0 0 10px rgba(169, 120, 97, 0.3);
+    }
+
+    .journey-content h4 {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .journey-content h4 .step-num {
+      color: var(--gold);
+      font-weight: 700;
+      margin-right: 0.5rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+    }
+
+    .journey-content p {
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+
+    /* PWA callout box */
+    .pwa-callout {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 3rem;
+      align-items: center;
+      margin-bottom: 4rem;
+    }
+
+    .pwa-text h3 {
+      font-size: clamp(1.3rem, 2vw, 1.6rem);
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    .pwa-text p {
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+
+    .pwa-text .gold { color: var(--gold); font-weight: 500; }
+
+    /* CSS Phone mockup */
+    .phone-mockup {
+      width: 220px;
+      height: 440px;
+      background: #0a0a0a;
+      border-radius: 32px;
+      border: 3px solid #333;
+      padding: 12px;
+      position: relative;
+      margin: 0 auto;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+    }
+
+    .phone-notch {
+      width: 80px;
+      height: 22px;
+      background: #0a0a0a;
+      border-radius: 0 0 14px 14px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: var(--bg-secondary);
+      border-radius: 22px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .phone-statusbar {
+      padding: 8px 14px 4px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.55rem;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-weight: 600;
+    }
+
+    .phone-app-header {
+      padding: 10px 14px;
+      text-align: center;
+      border-bottom: 1px solid rgba(169, 120, 97, 0.15);
+    }
+
+    .phone-app-header span {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      color: var(--gold);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .phone-content {
+      padding: 10px 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .phone-card {
+      background: var(--bg-card);
+      border-radius: 6px;
+      padding: 10px;
+    }
+
+    .phone-card-label {
+      font-size: 0.5rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .phone-card-title {
+      font-size: 0.65rem;
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .phone-progress-bar {
+      height: 3px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .phone-progress-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 3px;
+    }
+
+    .phone-photo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+    }
+
+    .phone-photo {
+      height: 36px;
+      background: linear-gradient(135deg, #2a2520, #1a1714);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone-photo::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(169,120,97,0.08), transparent);
+    }
+
+    .phone-milestone {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      background: rgba(169, 120, 97, 0.08);
+      border-radius: 4px;
+      border-left: 2px solid var(--gold);
+    }
+
+    .phone-milestone-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .phone-milestone span {
+      font-size: 0.5rem;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 768px) {
+      .pwa-callout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .phone-mockup {
+        width: 180px;
+        height: 360px;
+      }
+
+      .journey::before {
+        left: 27px;
+      }
+    }
+
+    /* ========================================
+       SECTION 8: SECURITY
+       ======================================== */
+    .security {
+      background: #0d0d0d;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle crosshatch pattern */
+    .security::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(45deg, rgba(255,255,255,0.012) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(255,255,255,0.012) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.012) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.012) 75%);
+      background-size: 20px 20px;
+      pointer-events: none;
+    }
+
+    .security-header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .security-header h2 {
+      margin-bottom: 1.25rem;
+    }
+
+    .security-header p {
+      font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+      line-height: 1.8;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Shield badge */
+    .security-shield {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(169, 120, 97, 0.08);
+      border: 1px solid rgba(169, 120, 97, 0.2);
+      border-radius: 50%;
+    }
+
+    /* Security grid */
+    .security-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 3rem;
+    }
+
+    .security-item {
+      text-align: center;
+      padding: 1.75rem 1.25rem;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.015);
+      transition: border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .security-item:hover {
+      border-color: rgba(169, 120, 97, 0.12);
+    }
+
+    .security-item-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.7;
+    }
+
+    .security-item h4 {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .security-item p {
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      max-width: 100%;
+    }
+
+    .security-footer {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .security-footer p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-style: italic;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 1024px) {
+      .security-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .security-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ========================================
+       SECTION 9: ROI & TIME SAVINGS
+       ======================================== */
+    .roi {
+      background: var(--bg-secondary);
+      position: relative;
+    }
+
+    .roi-header {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 5rem;
+    }
+
+    .roi-header h2 {
+      margin-bottom: 1.25rem;
+    }
+
+    .roi-header p {
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      line-height: 1.8;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Stats grid */
+    .roi-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 5rem;
+    }
+
+    .roi-stat-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 2px;
+      padding: 2.5rem 2rem;
+      transition: border-color 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .roi-stat-card:hover {
+      border-color: rgba(169, 120, 97, 0.12);
+    }
+
+    .roi-stat-card--wide {
+      grid-column: 1 / -1;
+    }
+
+    .roi-number {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      font-weight: 400;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    /* For counter animation */
+    .roi-number .counter {
+      display: inline;
+    }
+
+    .roi-stat-title {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .roi-stat-card p {
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: var(--text-secondary);
+    }
+
+    .roi-stat-card p .gold {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    /* Real ROI callout */
+    .roi-real {
+      text-align: center;
+      padding: 3.5rem 2rem;
+      border-top: 1px solid rgba(169, 120, 97, 0.15);
+      border-bottom: 1px solid rgba(169, 120, 97, 0.15);
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .roi-real h3 {
+      font-size: clamp(1.3rem, 2vw, 1.65rem);
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+    }
+
+    .roi-real p {
+      font-size: clamp(1rem, 1.2vw, 1.1rem);
+      line-height: 1.8;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .roi-real .gold {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .roi-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .roi-stat-card--wide {
+        grid-column: auto;
+      }
+    }
+
+    /* ========================================
+       SECTION 10: TIMELINE
+       ======================================== */
+    .timeline-section {
+      background: var(--bg-primary);
+      position: relative;
+    }
+
+    .timeline-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 5rem;
+    }
+
+    .timeline-header h2 {
+      margin-bottom: 1.25rem;
+    }
+
+    .timeline-header p {
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      line-height: 1.8;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Vertical timeline */
+    .timeline {
+      position: relative;
+      max-width: 740px;
+      margin: 0 auto 4rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 130px;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--gold), rgba(169, 120, 97, 0.1));
+    }
+
+    .timeline-phase {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 0 2.5rem;
+      padding-bottom: 3.5rem;
+      position: relative;
+    }
+
+    .timeline-phase:last-child {
+      padding-bottom: 0;
+    }
+
+    /* Phase label (left side) */
+    .phase-label {
+      text-align: right;
+      padding-top: 0.1rem;
+      padding-right: 1.25rem;
+      position: relative;
+    }
+
+    .phase-label::after {
+      content: '';
+      position: absolute;
+      right: -7px;
+      top: 0.35rem;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 2px solid var(--gold);
+      z-index: 2;
+      transition: background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .timeline-phase:hover .phase-label::after {
+      background: var(--gold);
+      box-shadow: 0 0 12px rgba(169, 120, 97, 0.35);
+    }
+
+    .phase-name {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .phase-weeks {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Phase content (right side) */
+    .phase-content h4 {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      margin-bottom: 0.85rem;
+    }
+
+    .phase-items {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .phase-items li {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .phase-items li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+
+    .phase-items li .bold {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* Timeline footnote */
+    .timeline-note {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 2.5rem 0;
+      border-top: 1px solid rgba(169, 120, 97, 0.15);
+    }
+
+    .timeline-note p {
+      font-family: var(--font-display);
+      font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .timeline-note .gold {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    @media (max-width: 640px) {
+      .timeline::before {
+        left: 20px;
+      }
+
+      .timeline-phase {
+        grid-template-columns: 1fr;
+        padding-left: 48px;
+        padding-bottom: 2.5rem;
+      }
+
+      .phase-label {
+        text-align: left;
+        padding-right: 0;
+        margin-bottom: 0.75rem;
+      }
+
+      .phase-label::after {
+        left: -35px;
+        right: auto;
+      }
+    }
+
+    /* ========================================
+       SECTION 11: CTA / NEXT STEPS
+       ======================================== */
+    .cta {
+      background: var(--bg-secondary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Large ambient glow */
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 900px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(169, 120, 97, 0.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .cta-content {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .cta-rule {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      border: none;
+      margin: 0 auto 2.5rem;
+    }
+
+    .cta-content h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    .cta-content h2 .gold {
+      color: var(--gold);
+    }
+
+    .cta-subtext {
+      font-size: clamp(1rem, 1.3vw, 1.15rem);
+      line-height: 1.8;
+      color: var(--text-secondary);
+      max-width: 580px;
+      margin: 0 auto 3rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 1rem 2.5rem;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: var(--bg-primary);
+      border: 2px solid var(--gold);
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-light);
+      border-color: var(--gold-light);
+      box-shadow: 0 6px 24px rgba(169, 120, 97, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--gold);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(169, 120, 97, 0.1);
+      color: var(--gold);
+      transform: translateY(-1px);
+    }
+
+    .cta-contact {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .cta-contact a {
+      color: var(--gold);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .cta-contact a:hover {
+      color: var(--gold-light);
+    }
+
+    .cta-contact .sep {
+      margin: 0 0.75rem;
+      opacity: 0.3;
+    }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+    .site-footer {
+      padding: 2.5rem var(--side-padding);
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      background: var(--bg-primary);
+    }
+
+    .site-footer p {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      opacity: 0.5;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* ========================================
+       RESPONSIVE
+       ======================================== */
+    @media (max-width: 768px) {
+      .header-nav {
+        display: none;
+      }
+
+      .numbers-strip {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem 1rem;
+      }
+
+      .hero-title {
+        font-size: clamp(2.8rem, 12vw, 4.5rem);
+      }
+
+      .hero-quote {
+        padding: 3rem 1rem;
+      }
+
+      .solution-pillars {
+        grid-template-columns: 1fr;
+      }
+
+      .platform-grid,
+      .platform-grid--bottom {
+        grid-template-columns: 1fr;
+      }
+
+      .security-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .roi-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .roi-stat-card--wide {
+        grid-column: auto;
+      }
+
+      .timeline::before {
+        left: 20px;
+      }
+
+      .timeline-phase {
+        grid-template-columns: 1fr;
+        padding-left: 48px;
+      }
+
+      .phase-label {
+        text-align: left;
+        padding-right: 0;
+        margin-bottom: 0.75rem;
+      }
+
+      .phase-label::after {
+        left: -35px;
+        right: auto;
+      }
+
+      .tiers-grid {
+        grid-template-columns: 1fr;
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .tier-card--featured {
+        transform: none;
+        order: -1;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .numbers-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero-title {
+        font-size: clamp(2.5rem, 14vw, 3.5rem);
+      }
+
+      .hero-subtitle {
+        font-size: 1.1rem;
+      }
+
+      .pillar-card {
+        padding: 1.75rem 1.5rem;
+      }
+
+      .feature-area {
+        padding: 1.75rem 1.5rem;
+      }
+
+      .tier-card {
+        padding: 2rem 1.5rem 1.75rem;
+      }
+
+      .roi-stat-card {
+        padding: 2rem 1.5rem;
+      }
+
+      .security-item {
+        padding: 1.5rem 1rem;
+      }
+    }
+
+    /* ========================================
+       iPHONE OPTIMIZATION (375px & below)
+       ======================================== */
+    @media (max-width: 390px) {
+      :root {
+        --section-padding: clamp(56px, 10vh, 100px);
+        --side-padding: 20px;
+      }
+
+      body {
+        font-size: 15px;
+      }
+
+      /* Safe area for notch iPhones */
+      .site-header {
+        padding-left: max(var(--side-padding), env(safe-area-inset-left));
+        padding-right: max(var(--side-padding), env(safe-area-inset-right));
+      }
+
+      .hero-content {
+        padding: 0 20px;
+      }
+
+      .hero-title {
+        font-size: clamp(2.2rem, 13vw, 3rem);
+        margin-bottom: 0.35rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .hero-tagline {
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+      }
+
+      .hero-prepared-for {
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        margin-bottom: 1.5rem;
+      }
+
+      /* Section headers tighter */
+      h2 {
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
+      }
+
+      h3 {
+        font-size: clamp(1.15rem, 5vw, 1.4rem);
+      }
+
+      .section-label {
+        font-size: 0.68rem;
+        margin-bottom: 1rem;
+      }
+
+      /* Challenge section */
+      .challenge-intro {
+        margin-bottom: 3rem;
+      }
+
+      .challenge-item {
+        padding: 1.75rem 0;
+      }
+
+      .challenge-number {
+        font-size: 2rem;
+      }
+
+      .challenge-headline {
+        font-size: 1.1rem;
+      }
+
+      .challenge-context {
+        font-size: 0.88rem;
+      }
+
+      /* Philosophy blocks */
+      .philosophy-label {
+        font-size: 0.95rem;
+      }
+
+      .philosophy-body p {
+        font-size: 0.88rem;
+      }
+
+      /* Hero quote */
+      .hero-quote {
+        padding: 2.5rem 0.5rem;
+        margin-bottom: 3rem;
+      }
+
+      .hero-quote blockquote {
+        font-size: clamp(1.4rem, 6vw, 1.8rem);
+      }
+
+      /* Numbers strip */
+      .numbers-strip {
+        padding: 2.5rem 0;
+        gap: 1.5rem 0.75rem;
+        margin-bottom: 3rem;
+      }
+
+      .number-item .number {
+        font-size: clamp(2rem, 8vw, 2.5rem);
+      }
+
+      .number-item .label {
+        font-size: 0.7rem;
+      }
+
+      /* Pull quotes */
+      .pull-quote {
+        padding: 1.75rem 0 1.75rem 1.25rem;
+      }
+
+      .pull-quote blockquote {
+        font-size: clamp(1rem, 4.5vw, 1.25rem);
+      }
+
+      /* Cards */
+      .pillar-card {
+        padding: 1.5rem 1.25rem;
+      }
+
+      .pillar-card p {
+        font-size: 0.85rem;
+      }
+
+      .feature-area {
+        padding: 1.5rem 1.25rem;
+      }
+
+      .feature-area-list li {
+        font-size: 0.82rem;
+      }
+
+      /* Tier cards */
+      .tier-card {
+        padding: 1.75rem 1.25rem 1.5rem;
+      }
+
+      .tier-name {
+        font-size: 1.35rem;
+      }
+
+      .tier-features li {
+        font-size: 0.8rem;
+      }
+
+      .tier-cta {
+        padding: 0.85rem 1rem;
+        font-size: 0.78rem;
+      }
+
+      /* Journey */
+      .journey-step {
+        grid-template-columns: 44px 1fr;
+        gap: 0 1.25rem;
+      }
+
+      .journey::before {
+        left: 21px;
+      }
+
+      .journey-content p {
+        font-size: 0.88rem;
+      }
+
+      /* PWA / Phone mockup */
+      .pwa-callout {
+        gap: 1.5rem;
+      }
+
+      .pwa-text h3 {
+        font-size: 1.15rem;
+      }
+
+      .pwa-text p {
+        font-size: 0.88rem;
+      }
+
+      .phone-mockup {
+        width: 160px;
+        height: 320px;
+        border-radius: 26px;
+        padding: 10px;
+      }
+
+      .phone-notch {
+        width: 65px;
+        height: 18px;
+        border-radius: 0 0 10px 10px;
+      }
+
+      .phone-screen {
+        border-radius: 18px;
+      }
+
+      /* Security */
+      .security-item {
+        padding: 1.25rem 1rem;
+      }
+
+      .security-item h4 {
+        font-size: 0.82rem;
+      }
+
+      .security-item p {
+        font-size: 0.78rem;
+      }
+
+      /* ROI */
+      .roi-stat-card {
+        padding: 1.75rem 1.25rem;
+      }
+
+      .roi-number {
+        font-size: clamp(2rem, 8vw, 2.5rem);
+      }
+
+      .roi-stat-card p {
+        font-size: 0.85rem;
+      }
+
+      .roi-real {
+        padding: 2.5rem 1rem;
+      }
+
+      .roi-real p {
+        font-size: 0.95rem;
+      }
+
+      /* Timeline */
+      .timeline-phase {
+        padding-left: 40px;
+      }
+
+      .timeline::before {
+        left: 16px;
+      }
+
+      .phase-label::after {
+        left: -31px;
+        width: 14px;
+        height: 14px;
+      }
+
+      .phase-items li {
+        font-size: 0.82rem;
+      }
+
+      /* CTA */
+      .cta-content h2 {
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
+      }
+
+      .cta-subtext {
+        font-size: 0.92rem;
+      }
+
+      .btn {
+        padding: 0.85rem 2rem;
+        font-size: 0.8rem;
+        max-width: 100%;
+      }
+
+      .cta-contact {
+        font-size: 0.78rem;
+      }
+
+      /* Closing statements */
+      .challenge-close p,
+      .understand-bridge p,
+      .solution-core-message {
+        font-size: clamp(1rem, 4.5vw, 1.2rem);
+      }
+
+      .timeline-note p {
+        font-size: clamp(0.95rem, 4vw, 1.1rem);
+      }
+
+      /* Footer */
+      .site-footer p {
+        font-size: 0.65rem;
+      }
+
+      /* Touch targets — ensure all interactive elements are at least 44px tall */
+      .header-nav a {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .tier-cta,
+      .btn {
+        min-height: 44px;
+      }
+    }
+
+    /* ========================================
+       SUBTLE BACKGROUND TEXTURE
+       ======================================== */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
+    /* ========================================
+       UTILITY
+       ======================================== */
+    .text-gold { color: var(--gold); }
+    .text-muted { color: var(--text-muted); }
+    .mb-0 { margin-bottom: 0; }
+    .mt-2 { margin-top: 2rem; }
+
+    /* ========================================
+       PRINT STYLESHEET
+       ======================================== */
+    @media print {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        box-shadow: none !important;
+      }
+
+      body {
+        background: #ffffff !important;
+        color: #1a1a1a !important;
+        font-size: 11pt;
+        line-height: 1.5;
+      }
+
+      body::after {
+        display: none !important;
+      }
+
+      .site-header {
+        position: static !important;
+        background: #ffffff !important;
+        backdrop-filter: none !important;
+        border-bottom: 2px solid #a97861 !important;
+        padding: 1rem 0 !important;
+      }
+
+      .header-nav { display: none !important; }
+
+      .header-company {
+        color: #a97861 !important;
+        font-size: 1.5rem !important;
+      }
+
+      .header-prepared {
+        color: #666 !important;
+      }
+
+      section {
+        padding: 2rem 0 !important;
+        page-break-inside: avoid;
+      }
+
+      .hero {
+        min-height: auto !important;
+        padding: 3rem 0 !important;
+      }
+
+      .hero::before,
+      .hero::after,
+      .solution::before,
+      .cta::before,
+      .security::before {
+        display: none !important;
+      }
+
+      .hero-scroll-hint,
+      .scroll-arrow {
+        display: none !important;
+      }
+
+      h1, h2, h3, h4 {
+        color: #1a1a1a !important;
+        page-break-after: avoid;
+      }
+
+      .text-gold, .gold, .accent,
+      .section-label,
+      .tier-subtitle,
+      .phase-name,
+      .challenge-number,
+      .roi-number,
+      .number-item .number,
+      .philosophy-label {
+        color: #a97861 !important;
+      }
+
+      p, li, .challenge-context, .tier-features li {
+        color: #333 !important;
+      }
+
+      .challenge-item,
+      .philosophy-block,
+      .journey-step,
+      .timeline-phase {
+        page-break-inside: avoid;
+      }
+
+      .tier-card,
+      .feature-area,
+      .roi-stat-card,
+      .security-item,
+      .pillar-card {
+        background: #f8f8f8 !important;
+        border: 1px solid #ddd !important;
+        page-break-inside: avoid;
+      }
+
+      .tier-card--featured {
+        border: 2px solid #a97861 !important;
+        transform: none !important;
+      }
+
+      .tier-badge {
+        background: #a97861 !important;
+        color: #fff !important;
+      }
+
+      .divider {
+        background: #a97861 !important;
+        opacity: 0.3;
+      }
+
+      .btn {
+        border: 1px solid #a97861 !important;
+        color: #1a1a1a !important;
+        background: transparent !important;
+        padding: 0.5rem 1rem !important;
+      }
+
+      .phone-mockup {
+        border: 2px solid #ccc !important;
+        background: #f0f0f0 !important;
+        box-shadow: none !important;
+      }
+
+      .phone-screen {
+        background: #fafafa !important;
+      }
+
+      .reveal,
+      .reveal-left,
+      .reveal-right,
+      .reveal-scale {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+
+      .solution-line {
+        transform: scaleX(1) !important;
+        background: #a97861 !important;
+      }
+
+      .site-footer {
+        border-top: 1px solid #ddd !important;
+        background: #ffffff !important;
+      }
+
+      .site-footer p {
+        color: #999 !important;
+        opacity: 1 !important;
+      }
+
+      .journey::before,
+      .timeline::before {
+        background: #a97861 !important;
+      }
+
+      .journey-dot,
+      .phase-label::after {
+        border-color: #a97861 !important;
+        background: #fff !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================
+       HEADER
+       ======================================== -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-brand">
+      <span class="header-prepared">Prepared by Pinecrest AI for</span>
+      <span class="header-company">Stalwork, Inc.</span>
+    </div>
+    <nav class="header-nav">
+      <a href="#challenge">Challenge</a>
+      <a href="#solution">Solution</a>
+      <a href="#tiers">Packages</a>
+      <a href="#timeline">Timeline</a>
+      <a href="#next-steps">Let's Talk</a>
+    </nav>
+  </header>
+
+  <!-- ========================================
+       SECTION 1: HERO
+       ======================================== -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <p class="hero-prepared-for">Stalwork, Inc.</p>
+      <h1 class="hero-title">
+        Command<br><span class="accent">Center</span>
+      </h1>
+      <p class="hero-subtitle">Built for Stalwork</p>
+      <p class="hero-tagline">
+        Project management and client transparency built
+        around the way Stalwork actually operates. Every project.
+        Every crew. Every client. One platform.
+      </p>
+      <hr class="hero-rule">
+      <div class="hero-scroll-hint">
+        <span>Explore the Vision</span>
+        <div class="scroll-arrow"></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ========================================
+       SECTION 2: THE CHALLENGE
+       ======================================== -->
+  <section class="challenge" id="challenge">
+    <div class="container">
+      <div class="challenge-intro reveal">
+        <span class="section-label">The Challenge</span>
+        <h2>The tools aren't keeping up<br>with <em class="text-gold">the operation.</em></h2>
+        <p class="mt-2">
+          3 PMs. 12+ self-performed trades per project. Concurrent luxury builds
+          across the Central Coast. The operation is sophisticated — the systems
+          running it are not.
+        </p>
+      </div>
+
+      <div class="challenge-list">
+
+        <!-- Pain Point 1 -->
+        <div class="challenge-item reveal">
+          <div class="challenge-number">01</div>
+          <div class="challenge-body">
+            <h3 class="challenge-headline">Three PMs. No shared dashboard.</h3>
+            <p class="challenge-context">
+              Ben, James, and Frank each run concurrent builds with 10+ trades happening
+              simultaneously. Project status lives across texts, emails, and spreadsheets.
+              Nobody sees the full picture.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pain Point 2 -->
+        <div class="challenge-item reveal">
+          <div class="challenge-number">02</div>
+          <div class="challenge-body">
+            <h3 class="challenge-headline">Seven-figure clients. <span class="gold">Reactive updates.</span></h3>
+            <p class="challenge-context">
+              Client communication runs on phone calls and emails. A family investing
+              seven figures in a custom home shouldn't have to call and ask,
+              "What's happening this week?"
+            </p>
+          </div>
+        </div>
+
+        <!-- Pain Point 3 -->
+        <div class="challenge-item reveal">
+          <div class="challenge-number">03</div>
+          <div class="challenge-body">
+            <h3 class="challenge-headline">6 open positions. <span class="gold">2 admin staff.</span></h3>
+            <p class="challenge-context">
+              Cortney and Abigail support every project, every client, every invoice.
+              Every new hire multiplies communication complexity. Without a central system,
+              scaling creates chaos.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pain Point 4 -->
+        <div class="challenge-item reveal">
+          <div class="challenge-number">04</div>
+          <div class="challenge-body">
+            <h3 class="challenge-headline">Specialized crews. <span class="gold">No shared schedule.</span></h3>
+            <p class="challenge-context">
+              Pablo's concrete crew, Aaron's framers, Omar's tile team — all moving
+              between job sites across a 35-mile radius. Scheduling conflicts don't
+              announce themselves. They show up when someone's on-site with no crew.
+            </p>
+          </div>
+        </div>
+
+        <!-- Pain Point 5 -->
+        <div class="challenge-item reveal">
+          <div class="challenge-number">05</div>
+          <div class="challenge-body">
+            <h3 class="challenge-headline">Permits and inspections. <span class="gold">Across every project.</span></h3>
+            <p class="challenge-context">
+              Title 24, arborist certs, grading permits, multi-agency approvals — all on
+              overlapping timelines across concurrent builds. One missed inspection means
+              work stops. That tracking can't live in someone's memory.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Closing statement -->
+      <div class="challenge-close reveal">
+        <p>
+          The operation has outgrown the tools. The question is whether
+          the replacement gets <span class="gold">built around Stalwork</span> —
+          or whether Stalwork has to bend to fit something off the shelf.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ========================================
+       SECTION 3: WE UNDERSTAND YOUR BUSINESS
+       ======================================== -->
+  <section class="understand" id="understand">
+    <div class="container">
+      <div class="understand-header reveal">
+        <span class="section-label">The Operation</span>
+        <h2>What the platform is <em class="text-gold">built around.</em></h2>
+        <p class="mt-2">
+          Every feature maps to a real part of the Stalwork operation.
+          Here's what we're designing for.
+        </p>
+      </div>
+
+      <!-- Philosophy blocks — facts only -->
+      <div class="philosophy-section">
+
+        <div class="philosophy-block reveal">
+          <div class="philosophy-label">Trade<br>Complexity</div>
+          <div class="philosophy-body">
+            <h4>12+ Self-Performed Trades Per Project</h4>
+            <p>
+              Framing, concrete, structural steel, tile, electrical, plumbing, HVAC,
+              landscape, finish carpentry, custom cabinetry, custom doors — all in-house.
+              Most GCs outsource half that list. That scope of control requires a
+              platform built for real coordination, not a generic task board.
+            </p>
+          </div>
+        </div>
+
+        <div class="philosophy-block reveal">
+          <div class="philosophy-label">Team<br>Structure</div>
+          <div class="philosophy-body">
+            <h4>Specialized Superintendents Across Shared Job Sites</h4>
+            <p>
+              Pablo Valencia on concrete. Aaron Grimes on framing. Omar Torres on tile.
+              Tricia Rohr on landscape. Gennady Fedonenko and Miguel Contreras on finish
+              carpentry. Each runs their trade across multiple active builds. The platform
+              gives each one visibility into their scope without drowning them in
+              someone else's workflow.
+            </p>
+          </div>
+        </div>
+
+        <div class="philosophy-block reveal">
+          <div class="philosophy-label">Active<br>Projects</div>
+          <div class="philosophy-body">
+            <h4>Concurrent Builds Across the Central Coast</h4>
+            <p>
+              Winkenbach Residence in SLO. Hope Residence in Paso Robles.
+              Athanasakos Residence in Arroyo Grande. Okimoto Residence in SLO.
+              Plus the Stalwork Office Building downtown. All active. All sharing crews
+              within a 35-mile radius.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Numbers strip -->
+      <div class="numbers-strip">
+        <div class="number-item reveal reveal-delay-1">
+          <div class="number">16</div>
+          <div class="label">Years Building<br>Excellence</div>
+        </div>
+        <div class="number-item reveal reveal-delay-2">
+          <div class="number">12+</div>
+          <div class="label">Self-Performed<br>Trade Disciplines</div>
+        </div>
+        <div class="number-item reveal reveal-delay-3">
+          <div class="number">A+</div>
+          <div class="label">BBB Rating<br>Top 11% in CA</div>
+        </div>
+        <div class="number-item reveal reveal-delay-4">
+          <div class="number">15</div>
+          <div class="label">Team Members<br>&amp; Growing Fast</div>
+        </div>
+      </div>
+
+      <!-- Bridge to next section -->
+      <div class="understand-bridge reveal">
+        <p>
+          Stalwork's reputation is built on process and precision.
+          The Command Center makes <span class="gold">both scalable.</span>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ========================================
+       SECTION 4: THE SOLUTION
+       ======================================== -->
+  <section class="solution" id="solution">
+    <!-- Animated gold line -->
+    <div class="solution-line reveal-scale"></div>
+
+    <div class="container">
+      <div class="solution-header reveal">
+        <span class="section-label">The Solution</span>
+        <h2>Introducing the Stalwork<br><span class="gold">Command Center</span></h2>
+      </div>
+
+      <div class="solution-core reveal">
+        <p class="solution-core-message">
+          One platform for <span class="gold">every project</span>, <span class="gold">every crew</span>,
+          <span class="gold">every client</span>. Not adapted from something else.
+          Built from scratch for Stalwork.
+        </p>
+      </div>
+
+      <!-- 4 Pillar Cards -->
+      <div class="solution-pillars">
+
+        <!-- Pillar 1: Central Dashboard -->
+        <div class="pillar-card reveal reveal-delay-1">
+          <div class="pillar-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+          </div>
+          <span class="pillar-number">01</span>
+          <h4>Central Project Dashboard</h4>
+          <p>
+            Every active build, every phase, every trade — one view.
+            Ben, James, and Frank see the <span class="gold">same source of truth</span>
+            in real time. No more stitching together texts, emails, and spreadsheets.
+          </p>
+        </div>
+
+        <!-- Pillar 2: Client Portal -->
+        <div class="pillar-card reveal reveal-delay-2">
+          <div class="pillar-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <span class="pillar-number">02</span>
+          <h4>Client Transparency Portal</h4>
+          <p>
+            Each homeowner gets a <span class="gold">Stalwork-branded portal</span> —
+            real-time progress, milestones, photos, weekly updates. Works like a
+            native app on their phone. No App Store download.
+          </p>
+        </div>
+
+        <!-- Pillar 3: Crew Scheduling -->
+        <div class="pillar-card reveal reveal-delay-3">
+          <div class="pillar-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+              <path d="M8 14h.01"/>
+              <path d="M12 14h.01"/>
+              <path d="M16 14h.01"/>
+              <path d="M8 18h.01"/>
+              <path d="M12 18h.01"/>
+            </svg>
+          </div>
+          <span class="pillar-number">03</span>
+          <h4>Crew &amp; Resource Scheduling</h4>
+          <p>
+            See where <span class="gold">every crew</span> is this week and next.
+            Spot conflicts between job sites before they happen —
+            not after someone's standing on-site with no crew.
+          </p>
+        </div>
+
+        <!-- Pillar 4: Automated Documentation -->
+        <div class="pillar-card reveal reveal-delay-4">
+          <div class="pillar-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <path d="M9 15l2 2 4-4"/>
+            </svg>
+          </div>
+          <span class="pillar-number">04</span>
+          <h4>Automated Documentation</h4>
+          <p>
+            Daily logs, progress photos, inspection checklists, client reports —
+            <span class="gold">generated automatically</span>. Change orders tracked,
+            permits logged. Cortney and Abigail get hours back every week.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Closing thought -->
+      <div class="solution-close reveal">
+        <p>
+          It doesn't change how you work.
+          It makes <span class="gold">how you already work</span> visible and scalable.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ========================================
+       SECTION 5: PLATFORM OVERVIEW
+       ======================================== -->
+  <section class="platform" id="platform">
+    <div class="container">
+      <div class="platform-header reveal">
+        <span class="section-label">Platform Overview</span>
+        <h2>Five modules. <em class="text-gold">No bloat.</em></h2>
+        <p class="mt-2">
+          Each module maps to a role — PM, superintendent, admin, or client.
+          Every feature earns its place.
+        </p>
+      </div>
+
+      <!-- Top row: 3 cards -->
+      <div class="platform-grid">
+
+        <!-- Feature Area 1: Project Management -->
+        <div class="feature-area reveal reveal-delay-1">
+          <div class="feature-area-header">
+            <div class="feature-area-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+              </svg>
+            </div>
+            <span class="feature-area-title">Project Management</span>
+          </div>
+          <ul class="feature-area-list">
+            <li><span class="highlight">Multi-project dashboard</span> — real-time phase tracking across all active builds</li>
+            <li>Gantt timeline with <span class="highlight">cross-trade dependency mapping</span></li>
+            <li>Task tracking by PM, superintendent, or trade</li>
+            <li>Milestone alerts before deadlines slip</li>
+          </ul>
+          <span class="feature-area-badge">Core Module</span>
+        </div>
+
+        <!-- Feature Area 2: Client Portal -->
+        <div class="feature-area reveal reveal-delay-2">
+          <div class="feature-area-header">
+            <div class="feature-area-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                <line x1="12" y1="18" x2="12.01" y2="18"/>
+              </svg>
+            </div>
+            <span class="feature-area-title">Client Portal</span>
+          </div>
+          <ul class="feature-area-list">
+            <li><span class="highlight">Stalwork-branded login</span> — your logo, colors, domain</li>
+            <li>Real-time project timeline with completed, active, and upcoming phases</li>
+            <li>Progress photo gallery — auto-populated from field crews</li>
+            <li>Weekly <span class="highlight">AI-generated progress reports</span></li>
+            <li><span class="highlight">PWA</span> — works like a native app from the home screen</li>
+          </ul>
+          <span class="feature-area-badge">Client-Facing</span>
+        </div>
+
+        <!-- Feature Area 3: Field Operations -->
+        <div class="feature-area reveal reveal-delay-3">
+          <div class="feature-area-header">
+            <div class="feature-area-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+              </svg>
+            </div>
+            <span class="feature-area-title">Field Operations</span>
+          </div>
+          <ul class="feature-area-list">
+            <li><span class="highlight">Mobile daily logs</span> with photo upload</li>
+            <li>QC checklists by trade — concrete, framing, tile, finish carpentry</li>
+            <li>Crew <span class="highlight">availability board</span> — who's where, this week and next</li>
+            <li>Weather-aware scheduling for SLO County</li>
+            <li>Material delivery tracking and site-readiness flags</li>
+          </ul>
+          <span class="feature-area-badge">Field Crew</span>
+        </div>
+
+      </div>
+
+      <!-- Bottom row: 2 cards, centered -->
+      <div class="platform-grid--bottom">
+
+        <!-- Feature Area 4: Office & Admin -->
+        <div class="feature-area reveal reveal-delay-1">
+          <div class="feature-area-header">
+            <div class="feature-area-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <span class="feature-area-title">Office &amp; Admin</span>
+          </div>
+          <ul class="feature-area-list">
+            <li><span class="highlight">Automated weekly client reports</span> — generated from field data</li>
+            <li>Document hub — plans, permits, change orders, contracts</li>
+            <li><span class="highlight">Permit tracker</span> with deadline alerts — Title 24, arborist, grading, septic</li>
+            <li>Budget tracking and change order management</li>
+          </ul>
+          <span class="feature-area-badge">Admin Team</span>
+        </div>
+
+        <!-- Feature Area 5: Intelligence -->
+        <div class="feature-area reveal reveal-delay-2">
+          <div class="feature-area-header">
+            <div class="feature-area-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </div>
+            <span class="feature-area-title">Intelligence &amp; Insights</span>
+          </div>
+          <ul class="feature-area-list">
+            <li><span class="highlight">AI-powered insights</span> — trend detection, delay prediction, cost alerts</li>
+            <li>Resource forecasting — flag crew overcommitment before it hits the field</li>
+            <li><span class="highlight">Critical path monitoring</span> across all active projects</li>
+            <li>Historical benchmarking — compare current builds against past timelines</li>
+          </ul>
+          <span class="feature-area-badge">AI-Powered</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="tiers" id="tiers">
+    <div class="container">
+
+      <div class="tiers-header reveal">
+        <span class="section-label">Packages</span>
+        <h2>Three tiers. <em class="text-gold">Each builds on the last.</em></h2>
+        <p>
+          Start with visibility. Add client transparency. Scale with AI.
+          No long-term contracts.
+        </p>
+      </div>
+
+      <div class="tiers-grid">
+
+        <!-- ================================
+             TIER 1: FOUNDATION
+             ================================ -->
+        <div class="tier-card reveal reveal-delay-1">
+          <div class="tier-header">
+            <h3 class="tier-name">Foundation</h3>
+            <div class="tier-subtitle">Visibility &amp; Control</div>
+            <p class="tier-desc">
+              The operational core. See everything, track everything.
+            </p>
+          </div>
+
+          <ul class="tier-features">
+            <li><span class="feat-bold">Project dashboard</span> — up to 5 active projects</li>
+            <li>Phase and milestone tracking</li>
+            <li><span class="feat-bold">Daily logs</span> with mobile photo upload</li>
+            <li>Document storage — plans, permits, change orders</li>
+            <li>Permit and inspection tracker</li>
+            <li>Crew scheduling board (drag-and-drop)</li>
+            <li>Team notifications and alerts</li>
+            <li>Role-based access — PM, Super, Admin</li>
+            <li>Responsive web app + SSL encryption</li>
+            <li>Weekly automated backups</li>
+          </ul>
+
+          <a href="#next-steps" class="tier-cta">Schedule a Walkthrough</a>
+        </div>
+
+        <!-- ================================
+             TIER 2: PROFESSIONAL (Recommended)
+             ================================ -->
+        <div class="tier-card tier-card--featured reveal reveal-delay-2">
+          <div class="tier-badge">Recommended</div>
+          <div class="tier-header">
+            <h3 class="tier-name">Professional</h3>
+            <div class="tier-subtitle">Client Transparency &amp; Automation</div>
+            <p class="tier-desc">
+              Foundation + client portal + automation.
+              Hours back for your admin team every week.
+            </p>
+          </div>
+
+          <div class="tier-inherits">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Everything in Foundation, plus:
+          </div>
+
+          <ul class="tier-features">
+            <li><span class="feat-gold">Client Portal</span> — branded login per homeowner</li>
+            <li>Client-facing timeline with milestone updates</li>
+            <li><span class="feat-bold">Progress photos</span> — auto-populated from daily logs</li>
+            <li><span class="feat-gold">AI-generated weekly reports</span></li>
+            <li><span class="feat-bold">PWA</span> — home screen app experience on iOS/Android</li>
+            <li>Change order workflow — request, approve, track</li>
+            <li>Budget tracking with variance alerts</li>
+            <li><span class="feat-bold">QC checklists</span> by trade and phase</li>
+            <li><span class="feat-bold">Crew scheduling</span> with conflict detection</li>
+            <li>Weather-aware scheduling</li>
+            <li>Custom Stalwork branding on portal</li>
+            <li>Up to <span class="feat-bold">10 active projects</span></li>
+          </ul>
+
+          <a href="#next-steps" class="tier-cta tier-cta--gold">Schedule a Walkthrough</a>
+        </div>
+
+        <!-- ================================
+             TIER 3: ENTERPRISE
+             ================================ -->
+        <div class="tier-card reveal reveal-delay-3">
+          <div class="tier-header">
+            <h3 class="tier-name">Enterprise</h3>
+            <div class="tier-subtitle">Intelligence &amp; Scale</div>
+            <p class="tier-desc">
+              Full platform. AI insights. Unlimited projects.
+            </p>
+          </div>
+
+          <div class="tier-inherits">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Everything in Professional, plus:
+          </div>
+
+          <ul class="tier-features">
+            <li><span class="feat-gold">AI Insights</span> — delay prediction, cost alerts, trend detection</li>
+            <li><span class="feat-bold">Resource forecasting</span> — predict crew conflicts weeks out</li>
+            <li>Historical project benchmarking</li>
+            <li>Schedule risk analysis</li>
+            <li><span class="feat-gold">Subcontractor portal</span> — subs see schedules, upload docs</li>
+            <li>Analytics dashboard — custom KPIs, exportable reports</li>
+            <li><span class="feat-bold">Multi-user client access</span> — owner + architect + designer</li>
+            <li><span class="feat-bold">Unlimited active projects</span></li>
+            <li>API access for accounting/ERP integrations</li>
+            <li><span class="feat-gold">Custom feature development</span></li>
+          </ul>
+
+          <a href="#next-steps" class="tier-cta">Schedule a Walkthrough</a>
+        </div>
+
+      </div>
+
+      <!-- Footnote -->
+      <div class="tiers-footnote reveal">
+        <p>
+          All tiers: <span class="gold">SSL encryption</span>, automated backups,
+          role-based access, responsive design. <span class="gold">Scale up anytime.</span>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ========================================
+       SECTION 7: CLIENT EXPERIENCE
+       ======================================== -->
+  <section class="client-exp" id="client-experience">
+    <div class="container">
+
+      <div class="client-exp-header reveal">
+        <span class="section-label">The Client Experience</span>
+        <h2>What your clients <em class="text-gold">actually see.</em></h2>
+        <p>
+          A branded portal that works like a native app.
+          Real-time project visibility without a single phone call.
+        </p>
+      </div>
+
+      <!-- Journey timeline -->
+      <div class="journey">
+
+        <div class="journey-step reveal">
+          <div class="journey-node"><div class="journey-dot"></div></div>
+          <div class="journey-content">
+            <h4><span class="step-num">01</span> Branded Welcome</h4>
+            <p>
+              Client receives a portal link, adds it to their home screen.
+              Looks and works like a dedicated Stalwork app.
+            </p>
+          </div>
+        </div>
+
+        <div class="journey-step reveal">
+          <div class="journey-node"><div class="journey-dot"></div></div>
+          <div class="journey-content">
+            <h4><span class="step-num">02</span> Real-Time Status</h4>
+            <p>
+              Current phase, upcoming milestones, today's activity — at a glance.
+              No "just checking in" calls.
+            </p>
+          </div>
+        </div>
+
+        <div class="journey-step reveal">
+          <div class="journey-node"><div class="journey-dot"></div></div>
+          <div class="journey-content">
+            <h4><span class="step-num">03</span> Auto Progress Photos</h4>
+            <p>
+              Photos from daily logs flow directly into the client's gallery.
+              They watch the build happen without asking.
+            </p>
+          </div>
+        </div>
+
+        <div class="journey-step reveal">
+          <div class="journey-node"><div class="journey-dot"></div></div>
+          <div class="journey-content">
+            <h4><span class="step-num">04</span> Weekly AI Reports</h4>
+            <p>
+              AI-generated progress report every Friday — this week's work,
+              next week's plan, budget status. Automatic.
+            </p>
+          </div>
+        </div>
+
+        <div class="journey-step reveal">
+          <div class="journey-node"><div class="journey-dot"></div></div>
+          <div class="journey-content">
+            <h4><span class="step-num">05</span> Complete Archive</h4>
+            <p>
+              At close-out, the client has a permanent digital record —
+              every log, photo, inspection, and milestone.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PWA callout with phone mockup -->
+      <div class="pwa-callout reveal">
+        <div class="pwa-text">
+          <h3>No App Store. No downloads.<br>Just <span class="gold">their project</span>, on their phone.</h3>
+          <p>
+            Clients add the portal to their home screen.
+            <span class="gold">Full-screen, Stalwork-branded, app-like.</span>
+            Launches instantly — no browser bars, no repeat logins.
+          </p>
+        </div>
+        <div class="phone-mockup">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-statusbar">
+              <span>9:41</span>
+              <span>5G</span>
+            </div>
+            <div class="phone-app-header">
+              <span>Stalwork</span>
+            </div>
+            <div class="phone-content">
+              <div class="phone-card">
+                <div class="phone-card-label">Current Phase</div>
+                <div class="phone-card-title">Finish Carpentry &amp; Millwork</div>
+                <div class="phone-progress-bar">
+                  <div class="phone-progress-fill" style="width: 72%"></div>
+                </div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-label">This Week's Photos</div>
+                <div class="phone-photo-grid">
+                  <div class="phone-photo"></div>
+                  <div class="phone-photo"></div>
+                  <div class="phone-photo"></div>
+                  <div class="phone-photo"></div>
+                </div>
+              </div>
+              <div class="phone-milestone">
+                <div class="phone-milestone-dot"></div>
+                <span>Framing complete — 24 photos</span>
+              </div>
+              <div class="phone-milestone">
+                <div class="phone-milestone-dot"></div>
+                <span>Tile installation started</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ========================================
+       SECTION 8: SECURITY & DATA PROTECTION
+       ======================================== -->
+  <section class="security" id="security">
+    <div class="container">
+
+      <!-- Shield icon -->
+      <div class="security-shield reveal">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <polyline points="9 12 11 14 15 10"/>
+        </svg>
+      </div>
+
+      <div class="security-header reveal">
+        <span class="section-label">Security</span>
+        <h2>Data protection. <em class="text-gold">No shortcuts.</em></h2>
+      </div>
+
+      <div class="security-grid">
+
+        <div class="security-item reveal reveal-delay-1">
+          <div class="security-item-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <h4>SSL/TLS Encryption</h4>
+          <p>All data encrypted in transit.</p>
+        </div>
+
+        <div class="security-item reveal reveal-delay-2">
+          <div class="security-item-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h4>Encrypted at Rest</h4>
+          <p>All data encrypted in storage.</p>
+        </div>
+
+        <div class="security-item reveal reveal-delay-3">
+          <div class="security-item-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h4>Role-Based Access</h4>
+          <p>PM, Super, Admin, Client — each role sees only what's theirs.</p>
+        </div>
+
+        <div class="security-item reveal reveal-delay-4">
+          <div class="security-item-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10 17 15 12 10 7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+          </div>
+          <h4>Secure Auth &amp; 2FA</h4>
+          <p>Password-protected with optional two-factor.</p>
+        </div>
+
+        <div class="security-item reveal reveal-delay-1">
+          <div class="security-item-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="21 8 21 21 3 21 3 8"/>
+              <rect x="1" y="3" width="22" height="5"/>
+              <line x1="10" y1="12" x2="14" y2="12"/>
+            </svg>
+          </div>
+          <h4>Automated Backups</h4>
+          <p>Daily backups, redundant storage.</p>
+        </div>
+
+        <div class="security-item reveal reveal-delay-2">
+          <div class="security-item-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <h4>Privacy by Design</h4>
+          <p>Client data never shared. Financials gated by permission.</p>
+        </div>
+
+        <div class="security-item reveal reveal-delay-3">
+          <div class="security-item-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
+              <rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
+              <line x1="6" y1="6" x2="6.01" y2="6"/>
+              <line x1="6" y1="18" x2="6.01" y2="18"/>
+            </svg>
+          </div>
+          <h4>Enterprise Infrastructure</h4>
+          <p>Cloud-hosted. 99.9% uptime.</p>
+        </div>
+
+        <div class="security-item reveal reveal-delay-4">
+          <div class="security-item-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="1 4 1 10 7 10"/>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+          </div>
+          <h4>Regular Updates</h4>
+          <p>Ongoing patches and vulnerability monitoring.</p>
+        </div>
+
+      </div>
+
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ========================================
+       SECTION 9: ROI & TIME SAVINGS
+       ======================================== -->
+  <section class="roi" id="roi">
+    <div class="container">
+
+      <div class="roi-header reveal">
+        <span class="section-label">ROI</span>
+        <h2>What changes <em class="text-gold">immediately.</em></h2>
+      </div>
+
+      <div class="roi-stats">
+
+        <!-- Stat 1 -->
+        <div class="roi-stat-card reveal">
+          <div class="roi-number">
+            <span class="counter" data-target="8" data-suffix="-12">0</span> hrs/week
+          </div>
+          <div class="roi-stat-title">Saved on Admin Tasks</div>
+          <p>
+            Automated reports, centralized docs, digital logs.
+            How many hours does your office spend assembling weekly updates today?
+          </p>
+        </div>
+
+        <!-- Stat 2 -->
+        <div class="roi-stat-card reveal">
+          <div class="roi-number">
+            <span class="counter" data-target="60" data-suffix="%+">0</span>
+          </div>
+          <div class="roi-stat-title">Fewer Client Check-In Calls</div>
+          <p>
+            Real-time portal access means clients stop calling to ask "what's happening."
+            PMs stay on-site.
+          </p>
+        </div>
+
+        <!-- Stat 3 -->
+        <div class="roi-stat-card reveal">
+          <div class="roi-number">
+            Weeks Ahead
+          </div>
+          <div class="roi-stat-title">Crew Conflicts Caught Early</div>
+          <p>
+            Conflict detection flags overlapping crew assignments before anyone's
+            standing on a job site with no crew.
+          </p>
+        </div>
+
+        <!-- Stat 4 -->
+        <div class="roi-stat-card reveal">
+          <div class="roi-number">
+            <span class="counter" data-target="80" data-suffix="%">0</span> Faster
+          </div>
+          <div class="roi-stat-title">Project Closeout</div>
+          <p>
+            Every doc, photo, and inspection is already organized.
+            Handover binder builds itself.
+          </p>
+        </div>
+
+        <!-- Stat 5 (wide) -->
+        <div class="roi-stat-card roi-stat-card--wide reveal">
+          <div class="roi-number">
+            Referrals
+          </div>
+          <div class="roi-stat-title">The Experience Clients Talk About</div>
+          <p>
+            A personal portal with real-time updates and a permanent construction archive.
+            Clients don't just remember the home — they remember the process.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- The Real ROI -->
+      <div class="roi-real reveal">
+        <h3>The bigger picture</h3>
+        <p>
+          Go from <span class="gold">3 concurrent projects to 8+</span> without
+          adding admin headcount. The system absorbs the complexity. Your team doesn't.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ========================================
+       SECTION 10: TIMELINE — PHASED DELIVERY
+       ======================================== -->
+  <section class="timeline-section" id="timeline">
+    <div class="container">
+
+      <div class="timeline-header reveal">
+        <span class="section-label">Timeline</span>
+        <h2>Kickoff to live. <em class="text-gold">12 weeks.</em></h2>
+        <p>
+          Four phases. You start using it from Week 1, not Week 12.
+        </p>
+      </div>
+
+      <div class="timeline">
+
+        <!-- Phase 1 -->
+        <div class="timeline-phase reveal">
+          <div class="phase-label">
+            <span class="phase-name">Phase 1</span>
+            <span class="phase-weeks">Weeks 1–2</span>
+          </div>
+          <div class="phase-content">
+            <h4>Foundation</h4>
+            <ul class="phase-items">
+              <li><span class="bold">Discovery</span> — map projects, team, workflows</li>
+              <li>Platform setup + Stalwork branding</li>
+              <li>Team onboarding — Ben, James, Frank, Cortney, Abigail</li>
+              <li><span class="bold">Dashboard and daily logs live</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="timeline-phase reveal">
+          <div class="phase-label">
+            <span class="phase-name">Phase 2</span>
+            <span class="phase-weeks">Weeks 3–5</span>
+          </div>
+          <div class="phase-content">
+            <h4>Client Portal</h4>
+            <ul class="phase-items">
+              <li><span class="bold">Portal design</span> — Stalwork branding, logo, colors</li>
+              <li>Launch with <span class="bold">first active project</span></li>
+              <li>AI weekly report setup</li>
+              <li><span class="bold">PWA testing</span> on iOS and Android</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="timeline-phase reveal">
+          <div class="phase-label">
+            <span class="phase-name">Phase 3</span>
+            <span class="phase-weeks">Weeks 6–9</span>
+          </div>
+          <div class="phase-content">
+            <h4>Advanced Features</h4>
+            <ul class="phase-items">
+              <li><span class="bold">Crew scheduling</span> with conflict detection</li>
+              <li>QC checklists by trade</li>
+              <li><span class="bold">Budget tracking</span> and change orders</li>
+              <li>Weather integration</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Phase 4 -->
+        <div class="timeline-phase reveal">
+          <div class="phase-label">
+            <span class="phase-name">Phase 4</span>
+            <span class="phase-weeks">Weeks 10–12</span>
+          </div>
+          <div class="phase-content">
+            <h4>Intelligence Layer</h4>
+            <ul class="phase-items">
+              <li><span class="bold">AI insights</span> — trend detection, delay prediction</li>
+              <li>Resource forecasting</li>
+              <li>Historical benchmarking</li>
+              <li><span class="bold">Analytics dashboard</span> with custom KPIs</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footnote -->
+      <div class="timeline-note reveal">
+        <p>
+          Each phase ships working software. Value from <span class="gold">day one.</span>
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ========================================
+       SECTION 11: NEXT STEPS / CTA
+       ======================================== -->
+  <section class="cta" id="next-steps">
+    <div class="container">
+      <div class="cta-content">
+
+        <hr class="cta-rule reveal">
+
+        <span class="section-label reveal reveal-delay-1">Next Steps</span>
+
+        <h2 class="reveal reveal-delay-2">
+          Ready to see it <span class="gold">with your data?</span>
+        </h2>
+
+        <p class="cta-subtext reveal reveal-delay-3">
+          We'll walk through the Command Center using your actual projects,
+          your team structure, and your current workflows. Not a generic demo.
+        </p>
+
+        <div class="cta-buttons reveal reveal-delay-4">
+          <a href="#" class="btn btn-primary">Schedule a Walkthrough</a>
+          <a href="https://stalwork-demo-app.vercel.app" target="_blank" class="btn btn-secondary">View Live Demo</a>
+        </div>
+
+        <p class="cta-contact reveal reveal-delay-5">
+          Questions? Reach out directly —
+          <a href="mailto:stuart@soule.net">stuart@soule.net</a>
+          <span class="sep">|</span>
+          <a href="tel:+16614254413">(661) 425-4413</a>
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================
+       FOOTER
+       ======================================== -->
+  <footer class="site-footer">
+    <p>Prepared by Pinecrest AI for Stalwork, Inc. &nbsp;&bull;&nbsp; Confidential</p>
+  </footer>
+
+
+  <!-- ========================================
+       JAVASCRIPT: Scroll Animations
+       ======================================== -->
+  <script>
+    // ---- Header scroll effect ----
+    const header = document.getElementById('siteHeader');
+    let lastScroll = 0;
+
+    function handleHeaderScroll() {
+      const currentScroll = window.scrollY;
+      if (currentScroll > 60) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+      lastScroll = currentScroll;
+    }
+
+    window.addEventListener('scroll', handleHeaderScroll, { passive: true });
+
+    // ---- Intersection Observer for reveal animations ----
+    function createRevealObserver() {
+      const options = {
+        root: null,
+        rootMargin: '0px 0px -80px 0px',
+        threshold: 0.1
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // Once revealed, stop observing (one-time animation)
+            observer.unobserve(entry.target);
+          }
+        });
+      }, options);
+
+      // Observe all elements with reveal classes
+      const revealElements = document.querySelectorAll(
+        '.reveal, .reveal-left, .reveal-right, .reveal-scale'
+      );
+      revealElements.forEach(el => observer.observe(el));
+    }
+
+    // ---- Animated number counters (ROI section) ----
+    function createCounterObserver() {
+      const counters = document.querySelectorAll('.counter');
+      if (!counters.length) return;
+
+      const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const target = parseInt(el.getAttribute('data-target'), 10);
+            const suffix = el.getAttribute('data-suffix') || '';
+            const duration = 1800;
+            const startTime = performance.now();
+
+            function updateCounter(currentTime) {
+              const elapsed = currentTime - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              // Ease-out cubic
+              const eased = 1 - Math.pow(1 - progress, 3);
+              const current = Math.round(eased * target);
+              el.textContent = current + suffix;
+
+              if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+              }
+            }
+
+            requestAnimationFrame(updateCounter);
+            counterObserver.unobserve(el);
+          }
+        });
+      }, { threshold: 0.3 });
+
+      counters.forEach(c => counterObserver.observe(c));
+    }
+
+    // ---- Smooth scroll for nav links ----
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          const headerHeight = header.offsetHeight;
+          const targetPosition = target.getBoundingClientRect().top + window.scrollY - headerHeight - 20;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // ---- Subtle parallax for hero ----
+    function initParallax() {
+      const hero = document.querySelector('.hero');
+      const heroContent = document.querySelector('.hero-content');
+      if (!hero || !heroContent) return;
+
+      // Respect reduced motion preference
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Only apply parallax on larger screens
+      if (window.innerWidth < 768) return;
+
+      let ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          requestAnimationFrame(function() {
+            const scrollY = window.scrollY;
+            const heroHeight = hero.offsetHeight;
+            if (scrollY < heroHeight) {
+              const progress = scrollY / heroHeight;
+              // Content moves up slightly slower than scroll — subtle depth
+              heroContent.style.transform = 'translateY(' + (scrollY * 0.15) + 'px)';
+              heroContent.style.opacity = 1 - (progress * 0.6);
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+    }
+
+    // ---- Initialize ----
+    function init() {
+      createRevealObserver();
+      createCounterObserver();
+      initParallax();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+
+    // Also run immediately in case DOM is already loaded
+    if (document.readyState !== 'loading') {
+      init();
+    }
+  </script>
+
+</body>
+</html>
