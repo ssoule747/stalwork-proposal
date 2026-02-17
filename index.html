@@ -2938,6 +2938,340 @@
         background: #fff !important;
       }
     }
+
+    /* ========================================
+       BOOKING MODAL
+       ======================================== */
+    .booking-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .booking-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .booking-modal {
+      background: var(--bg-secondary);
+      border: 1px solid rgba(169, 120, 97, 0.25);
+      border-radius: 8px;
+      width: 90%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2.5rem 2rem 2rem;
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .booking-overlay.active .booking-modal {
+      transform: translateY(0) scale(1);
+    }
+    .booking-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.25rem;
+      transition: color 0.2s;
+    }
+    .booking-close:hover { color: var(--text-primary); }
+    .booking-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+      color: var(--text-primary);
+    }
+    .booking-subtitle {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Step indicators */
+    .booking-steps {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .booking-step-dot {
+      flex: 1;
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.08);
+      transition: background 0.3s;
+    }
+    .booking-step-dot.active { background: var(--gold); }
+    .booking-step-dot.done { background: var(--gold-dark); }
+
+    /* Calendar */
+    .booking-cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .booking-cal-header span {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+    .booking-cal-nav {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-secondary);
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .booking-cal-nav:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .booking-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 1.5rem;
+    }
+    .booking-cal-dow {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 0.25rem 0;
+    }
+    .booking-cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      background: none;
+      transition: all 0.15s;
+    }
+    .booking-cal-day:hover:not(.disabled):not(.empty) {
+      border-color: var(--gold);
+      color: var(--text-primary);
+    }
+    .booking-cal-day.selected {
+      background: var(--gold);
+      color: var(--bg-primary);
+      font-weight: 600;
+    }
+    .booking-cal-day.disabled {
+      color: rgba(255,255,255,0.15);
+      cursor: default;
+    }
+    .booking-cal-day.empty {
+      cursor: default;
+    }
+    .booking-cal-day.today {
+      border-color: rgba(169, 120, 97, 0.4);
+    }
+
+    /* Time slots */
+    .booking-times {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .booking-time-slot {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 0.65rem 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .booking-time-slot:hover {
+      border-color: var(--gold);
+      color: var(--text-primary);
+    }
+    .booking-time-slot.selected {
+      border-color: var(--gold);
+      background: rgba(169, 120, 97, 0.12);
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* Form inputs */
+    .booking-form { display: flex; flex-direction: column; gap: 0.75rem; }
+    .booking-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .booking-field label {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+    .booking-field input,
+    .booking-field textarea {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 0.65rem 0.75rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .booking-field input:focus,
+    .booking-field textarea:focus {
+      border-color: var(--gold);
+    }
+    .booking-field textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    /* Booking actions */
+    .booking-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .booking-btn {
+      flex: 1;
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.85rem 1rem;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .booking-btn-back {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-secondary);
+    }
+    .booking-btn-back:hover {
+      border-color: rgba(255,255,255,0.25);
+      color: var(--text-primary);
+    }
+    .booking-btn-next {
+      background: var(--gold);
+      color: var(--bg-primary);
+      border: 1px solid var(--gold);
+    }
+    .booking-btn-next:hover {
+      background: var(--gold-light);
+      border-color: var(--gold-light);
+      box-shadow: 0 4px 16px rgba(169, 120, 97, 0.25);
+    }
+    .booking-btn-next:disabled {
+      opacity: 0.4;
+      cursor: default;
+      box-shadow: none;
+    }
+    .booking-btn-next:disabled:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    /* Confirmation */
+    .booking-confirm {
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .booking-confirm-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 1rem;
+      background: rgba(169, 120, 97, 0.12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .booking-confirm h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    .booking-confirm p {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .booking-confirm .gold { color: var(--gold); font-weight: 600; }
+    .booking-summary {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      padding: 1rem;
+      margin: 1rem 0;
+      text-align: left;
+    }
+    .booking-summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      padding: 0.3rem 0;
+    }
+    .booking-summary-row span:first-child {
+      color: var(--text-muted);
+    }
+    .booking-summary-row span:last-child {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    /* Scrollbar for modal */
+    .booking-modal::-webkit-scrollbar { width: 4px; }
+    .booking-modal::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+    .booking-modal { scrollbar-width: thin; scrollbar-color: #333 transparent; }
+
+    @media (max-width: 480px) {
+      .booking-modal { padding: 2rem 1.25rem 1.5rem; }
+      .booking-times { grid-template-columns: 1fr 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -3381,7 +3715,7 @@
             <li>Weekly automated backups</li>
           </ul>
 
-          <a href="mailto:stuart@soule.net?subject=Stalwork%20Command%20Center%20—%20Walkthrough%20Request" class="tier-cta">Schedule a Walkthrough</a>
+          <a href="#" data-booking class="tier-cta">Schedule a Walkthrough</a>
         </div>
 
         <!-- ================================
@@ -3418,7 +3752,7 @@
             <li>Up to <span class="feat-bold">10 active projects</span></li>
           </ul>
 
-          <a href="#next-steps" class="tier-cta tier-cta--gold">Schedule a Walkthrough</a>
+          <a href="#" data-booking class="tier-cta tier-cta--gold">Schedule a Walkthrough</a>
         </div>
 
         <!-- ================================
@@ -3451,7 +3785,7 @@
             <li><span class="feat-gold">Custom feature development</span></li>
           </ul>
 
-          <a href="mailto:stuart@soule.net?subject=Stalwork%20Command%20Center%20—%20Walkthrough%20Request" class="tier-cta">Schedule a Walkthrough</a>
+          <a href="#" data-booking class="tier-cta">Schedule a Walkthrough</a>
         </div>
 
       </div>
@@ -3609,7 +3943,7 @@
         </p>
 
         <div class="cta-buttons reveal reveal-delay-4">
-          <a href="mailto:stuart@soule.net?subject=Stalwork%20Command%20Center%20—%20Walkthrough%20Request" class="btn btn-primary">Schedule a Walkthrough</a>
+          <a href="#" data-booking class="btn btn-primary">Schedule a Walkthrough</a>
           <a href="https://stalwork-demo-app.vercel.app" target="_blank" class="btn btn-secondary">View Live Demo</a>
         </div>
 
@@ -3631,6 +3965,101 @@
     <p>Prepared by Pinecrest AI for Stalwork, Inc. &nbsp;&bull;&nbsp; Confidential</p>
   </footer>
 
+
+  <!-- ========================================
+       BOOKING MODAL
+       ======================================== -->
+  <div class="booking-overlay" id="bookingOverlay">
+    <div class="booking-modal">
+      <button class="booking-close" id="bookingClose">&times;</button>
+
+      <!-- Step 1: Pick a Date -->
+      <div id="bookingStep1">
+        <h3 class="booking-title">Schedule a Walkthrough</h3>
+        <p class="booking-subtitle">Pick a date and time that works for you.</p>
+        <div class="booking-steps">
+          <div class="booking-step-dot active"></div>
+          <div class="booking-step-dot"></div>
+          <div class="booking-step-dot"></div>
+        </div>
+        <div class="booking-cal-header">
+          <button class="booking-cal-nav" id="calPrev">&#8249;</button>
+          <span id="calMonthYear"></span>
+          <button class="booking-cal-nav" id="calNext">&#8250;</button>
+        </div>
+        <div class="booking-cal-grid" id="calGrid"></div>
+        <div class="booking-actions">
+          <button class="booking-btn booking-btn-next" id="step1Next" disabled>Select a Time</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Pick a Time -->
+      <div id="bookingStep2" style="display:none">
+        <h3 class="booking-title">Choose a Time</h3>
+        <p class="booking-subtitle" id="step2Date"></p>
+        <div class="booking-steps">
+          <div class="booking-step-dot done"></div>
+          <div class="booking-step-dot active"></div>
+          <div class="booking-step-dot"></div>
+        </div>
+        <div class="booking-times" id="timeSlots"></div>
+        <div class="booking-actions">
+          <button class="booking-btn booking-btn-back" id="step2Back">Back</button>
+          <button class="booking-btn booking-btn-next" id="step2Next" disabled>Your Details</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Contact Info -->
+      <div id="bookingStep3" style="display:none">
+        <h3 class="booking-title">Your Details</h3>
+        <p class="booking-subtitle" id="step3Summary"></p>
+        <div class="booking-steps">
+          <div class="booking-step-dot done"></div>
+          <div class="booking-step-dot done"></div>
+          <div class="booking-step-dot active"></div>
+        </div>
+        <form class="booking-form" id="bookingForm">
+          <div class="booking-field">
+            <label for="bookName">Name</label>
+            <input type="text" id="bookName" placeholder="Your full name" required>
+          </div>
+          <div class="booking-field">
+            <label for="bookEmail">Email</label>
+            <input type="email" id="bookEmail" placeholder="you@company.com" required>
+          </div>
+          <div class="booking-field">
+            <label for="bookCompany">Company</label>
+            <input type="text" id="bookCompany" placeholder="Company name (optional)">
+          </div>
+          <div class="booking-field">
+            <label for="bookNote">Anything we should know?</label>
+            <textarea id="bookNote" placeholder="Current pain points, project count, etc."></textarea>
+          </div>
+          <div class="booking-actions">
+            <button type="button" class="booking-btn booking-btn-back" id="step3Back">Back</button>
+            <button type="submit" class="booking-btn booking-btn-next">Confirm Booking</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Step 4: Confirmation -->
+      <div id="bookingStep4" style="display:none">
+        <div class="booking-confirm">
+          <div class="booking-confirm-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a97861" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3>You're Booked</h3>
+          <p>A confirmation has been sent to <span class="gold" id="confirmEmail"></span>.</p>
+          <div class="booking-summary" id="confirmSummary"></div>
+          <p>Stuart will follow up within 24 hours to confirm. Looking forward to it.</p>
+          <div class="booking-actions" style="margin-top:1.5rem">
+            <button class="booking-btn booking-btn-next" id="bookingDone" style="width:100%">Done</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 
   <!-- ========================================
        JAVASCRIPT: Scroll Animations
@@ -3716,6 +4145,8 @@
     // ---- Smooth scroll for nav links ----
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function(e) {
+        // Skip booking buttons — handled separately
+        if (this.hasAttribute('data-booking')) return;
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
@@ -3760,11 +4191,234 @@
       }, { passive: true });
     }
 
+    // ---- Booking Modal ----
+    (function() {
+      const overlay = document.getElementById('bookingOverlay');
+      const closeBtn = document.getElementById('bookingClose');
+      const steps = [
+        document.getElementById('bookingStep1'),
+        document.getElementById('bookingStep2'),
+        document.getElementById('bookingStep3'),
+        document.getElementById('bookingStep4')
+      ];
+
+      let selectedDate = null;
+      let selectedTime = null;
+      let currentMonth = new Date();
+
+      const timeOptions = [
+        '9:00 AM', '9:30 AM', '10:00 AM', '10:30 AM',
+        '11:00 AM', '11:30 AM', '1:00 PM', '1:30 PM',
+        '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM',
+        '4:00 PM', '4:30 PM'
+      ];
+
+      const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+      function openModal() {
+        selectedDate = null;
+        selectedTime = null;
+        currentMonth = new Date();
+        showStep(0);
+        renderCalendar();
+        document.getElementById('step1Next').disabled = true;
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function showStep(n) {
+        steps.forEach((s, i) => s.style.display = i === n ? 'block' : 'none');
+      }
+
+      // Calendar rendering
+      function renderCalendar() {
+        const grid = document.getElementById('calGrid');
+        const label = document.getElementById('calMonthYear');
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth();
+        label.textContent = monthNames[month] + ' ' + year;
+
+        grid.innerHTML = '';
+
+        // Day-of-week headers
+        dayNames.forEach(d => {
+          const el = document.createElement('div');
+          el.className = 'booking-cal-dow';
+          el.textContent = d;
+          grid.appendChild(el);
+        });
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const today = new Date();
+        today.setHours(0,0,0,0);
+
+        // Empty cells before first day
+        for (let i = 0; i < firstDay; i++) {
+          const el = document.createElement('button');
+          el.className = 'booking-cal-day empty';
+          el.type = 'button';
+          grid.appendChild(el);
+        }
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const date = new Date(year, month, d);
+          const el = document.createElement('button');
+          el.className = 'booking-cal-day';
+          el.type = 'button';
+          el.textContent = d;
+
+          const dayOfWeek = date.getDay();
+          if (date < today || dayOfWeek === 0 || dayOfWeek === 6) {
+            el.classList.add('disabled');
+          } else {
+            if (date.getTime() === today.getTime()) el.classList.add('today');
+            if (selectedDate && date.toDateString() === selectedDate.toDateString()) {
+              el.classList.add('selected');
+            }
+            el.addEventListener('click', function() {
+              selectedDate = date;
+              document.getElementById('step1Next').disabled = false;
+              renderCalendar();
+            });
+          }
+          grid.appendChild(el);
+        }
+      }
+
+      document.getElementById('calPrev').addEventListener('click', function() {
+        const now = new Date();
+        // Don't go before current month
+        if (currentMonth.getFullYear() === now.getFullYear() && currentMonth.getMonth() === now.getMonth()) return;
+        currentMonth.setMonth(currentMonth.getMonth() - 1);
+        renderCalendar();
+      });
+
+      document.getElementById('calNext').addEventListener('click', function() {
+        // Allow up to 3 months ahead
+        const max = new Date();
+        max.setMonth(max.getMonth() + 3);
+        if (currentMonth >= max) return;
+        currentMonth.setMonth(currentMonth.getMonth() + 1);
+        renderCalendar();
+      });
+
+      // Step 1 → 2
+      document.getElementById('step1Next').addEventListener('click', function() {
+        if (!selectedDate) return;
+        selectedTime = null;
+        document.getElementById('step2Next').disabled = true;
+        const opts = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+        document.getElementById('step2Date').textContent = selectedDate.toLocaleDateString('en-US', opts);
+        renderTimeSlots();
+        showStep(1);
+      });
+
+      function renderTimeSlots() {
+        const container = document.getElementById('timeSlots');
+        container.innerHTML = '';
+        timeOptions.forEach(function(t) {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'booking-time-slot';
+          btn.textContent = t;
+          if (selectedTime === t) btn.classList.add('selected');
+          btn.addEventListener('click', function() {
+            selectedTime = t;
+            document.getElementById('step2Next').disabled = false;
+            renderTimeSlots();
+          });
+          container.appendChild(btn);
+        });
+      }
+
+      // Step 2 → 3
+      document.getElementById('step2Next').addEventListener('click', function() {
+        if (!selectedTime) return;
+        const opts = { weekday: 'short', month: 'short', day: 'numeric' };
+        document.getElementById('step3Summary').textContent = selectedDate.toLocaleDateString('en-US', opts) + ' at ' + selectedTime + ' (Pacific)';
+        showStep(2);
+      });
+
+      // Back buttons
+      document.getElementById('step2Back').addEventListener('click', function() { showStep(0); });
+      document.getElementById('step3Back').addEventListener('click', function() { showStep(1); });
+
+      // Form submit
+      document.getElementById('bookingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('bookName').value.trim();
+        const email = document.getElementById('bookEmail').value.trim();
+        const company = document.getElementById('bookCompany').value.trim();
+        const note = document.getElementById('bookNote').value.trim();
+        if (!name || !email) return;
+
+        const opts = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+        const dateStr = selectedDate.toLocaleDateString('en-US', opts);
+
+        // Build summary
+        document.getElementById('confirmEmail').textContent = email;
+        const summaryEl = document.getElementById('confirmSummary');
+        summaryEl.innerHTML =
+          '<div class="booking-summary-row"><span>Date</span><span>' + dateStr + '</span></div>' +
+          '<div class="booking-summary-row"><span>Time</span><span>' + selectedTime + ' (Pacific)</span></div>' +
+          '<div class="booking-summary-row"><span>Name</span><span>' + name + '</span></div>' +
+          (company ? '<div class="booking-summary-row"><span>Company</span><span>' + company + '</span></div>' : '');
+
+        // Send via formsubmit.co (goes to stuart@soule.net)
+        var formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('company', company || 'N/A');
+        formData.append('message', 'Walkthrough Request\n\nDate: ' + dateStr + '\nTime: ' + selectedTime + ' (Pacific)\nName: ' + name + '\nEmail: ' + email + '\nCompany: ' + (company || 'N/A') + '\nNotes: ' + (note || 'None'));
+        formData.append('_subject', 'Walkthrough Request — ' + name + ' — ' + dateStr + ' ' + selectedTime);
+        formData.append('_captcha', 'false');
+        formData.append('_template', 'table');
+
+        fetch('https://formsubmit.co/ajax/stuart@soule.net', {
+          method: 'POST',
+          body: formData
+        }).catch(function() { /* silent fail — show confirmation anyway */ });
+
+        showStep(3);
+      });
+
+      // Done button
+      document.getElementById('bookingDone').addEventListener('click', function() {
+        closeModal();
+        // Reset form
+        document.getElementById('bookingForm').reset();
+      });
+
+      // Close
+      closeBtn.addEventListener('click', closeModal);
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closeModal();
+      });
+
+      // Attach to all walkthrough buttons
+      window.openBookingModal = openModal;
+    })();
+
     // ---- Initialize ----
     function init() {
       createRevealObserver();
       createCounterObserver();
       initParallax();
+
+      // Bind all Schedule a Walkthrough buttons
+      document.querySelectorAll('[data-booking]').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.openBookingModal();
+        });
+      });
     }
 
     document.addEventListener('DOMContentLoaded', init);
